@@ -6,6 +6,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayout;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,15 +17,39 @@ public class MainActivity extends AppCompatActivity {
     private int playerR = 1;
     private int size = 9;
     private int winC = 3;
+    private float width;
+    private float height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        width = displayMetrics.widthPixels / displayMetrics.density;
+        height = displayMetrics.heightPixels / displayMetrics.density;
         board = findViewById(R.id.grid);
+        //board.setBackgroundColor(Color.BLACK);
         for (int i = 0; i < size; i++) {
             fillGrid(i);
         }
+    }
+
+    public void fillGrid(int index) {
+        final ImageView icon = new ImageView(this);
+        icon.setImageResource(R.drawable.red);
+        int imageDimension = (int) (width - 90) / 3;//where 3 is the column count
+        final float scale = this.getResources().getDisplayMetrics().density;
+        int pixels = (int) (imageDimension * scale + 0.5f);
+        icon.setTag(-1);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(pixels, pixels);
+        int mDPR = (int) (imageDimension / 18 * scale + 0.5f);
+        int div = (int) (16 * scale) - 42;
+        int mDPD = (int) (imageDimension / div * scale + 0.5f); // Should be / 6 on smaller screen
+        lp.setMargins(mDPR, mDPD, mDPR, mDPD);
+        icon.setLayoutParams(lp);
+        icon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        //setClick(icon);
+        board.addView(icon, index);
     }
 
     public int checkWin(int val) {
@@ -121,14 +146,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void fillGrid(int index) {
-        final ImageView icon = new ImageView(this);
-        //icon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.red, null));
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(360, 360);
-        params.setMargins(30, 30, 30, 30);
-        icon.setLayoutParams(params);
-        icon.setTag(-1);
-        icon.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+    public void setClick(final ImageView icon) {
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View o_view) {
@@ -154,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        board.addView(icon, index);
     }
 
     public void displayDialog(String title, String message, String buttonM) {

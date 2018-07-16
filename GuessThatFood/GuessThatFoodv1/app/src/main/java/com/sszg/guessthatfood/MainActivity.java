@@ -12,18 +12,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.customsearch.Customsearch;
 import com.google.api.services.customsearch.model.Result;
 import com.google.api.services.customsearch.model.Search;
 
-import java.io.BufferedReader;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         scoreTV = findViewById(R.id.score);
         picture = findViewById(R.id.picture);
         resetGame();
+        //getWebsite();
+        runNetworkTask();
     }
 
     public void initializeButtons() {
@@ -166,6 +171,110 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void runNetworkTask() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (String f : foods) {
+                    List<Result> results = new ArrayList<>();
+
+                    try {
+                        results = search(f);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (results != null) {
+                        for (Result result : results) {
+                            System.out.println(result.getLink());
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
+    public List<Result> search(String keyword) {
+        Customsearch customsearch = null;
+
+
+        try {
+            customsearch = new Customsearch(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
+                public void initialize(HttpRequest httpRequest) {
+                    try {
+                        // set connect and read timeouts
+                        httpRequest.setConnectTimeout(HTTP_REQUEST_TIMEOUT);
+                        httpRequest.setReadTimeout(HTTP_REQUEST_TIMEOUT);
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<Result> resultList = null;
+        try {
+            Customsearch.Cse.List list;
+            if (customsearch != null) {
+                list = customsearch.cse().list(keyword);
+                list.setKey("AIzaSyB058366Q83_r2QtNskYAtmOhTbDyOTWt4");
+                list.setCx("002740584417081531455:fnr_tspgkay");
+                list.setSearchType("image");
+                list.setNum(1L);
+                Search results = list.execute();
+                resultList = results.getItems();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultList;
+    }
+
+    public String getURL(String query) {
+        return "https://www.google.com/search?q=" + query + "&source=lnms&tbm=isch";
+    }
+
+    private void getWebsite() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String searchURL = getURL(foods.get(0)) + "&num=" + 3;
+                    //without proper User-Agent, we will get 403 error
+                    Document doc = Jsoup.connect(searchURL).userAgent("Mozilla/5.0").get();
+
+                    //Get all elements with img tag ,
+
+                    Elements img = doc.getElementsByTag("img");
+
+                    for (Element el : img) {
+
+                        String src = el.absUrl("src");
+
+
+                        System.out.println("Image Found!");
+
+                        System.out.println("src attribute is : " + src);
+
+
+                        //getImages(src);
+
+
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //result.setText(builder.toString());
+                        }
+                    });
+                } catch (Exception ignore) {
+                }
+            }
+        }).start();
     }
 
     public void initializeFoods() {
