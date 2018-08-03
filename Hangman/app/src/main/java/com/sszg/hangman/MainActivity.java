@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     EditText guessLetter;
     @BindView(R.id.guess_button)
     Button guessButton;
+    // ***CUSTOM LOGIC***
     private int lives = 6;
     private String answer;
     private ArrayList<String> wrongLetters;
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         answer = readFoods(getAssets());
         wrongLetters = new ArrayList<>();
         rightLetters = new ArrayList<>();
-        setPicture(0);
         drawWord();
         System.out.println("ANSWER IS: " + answer);
     }
