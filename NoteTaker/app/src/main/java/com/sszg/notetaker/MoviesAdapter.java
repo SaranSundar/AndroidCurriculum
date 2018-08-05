@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
+public class  MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
 
     private List<Movie> moviesList;
 
