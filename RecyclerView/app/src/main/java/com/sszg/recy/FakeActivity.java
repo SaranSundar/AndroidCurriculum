@@ -14,10 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class MainActivity extends AppCompatActivity implements AddMovieFragment.CallbackToActivity {
+public class FakeActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private MoviesAdapter moviesAdapter;
+    private MovieAdapter2 moviesAdapter;
     private FloatingActionButton fab;
 
     @Override
@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements AddMovieFragment.
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Movie List");
         setSupportActionBar(toolbar);
+        setupRecyclerView();
+        populateList();
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,16 +41,25 @@ public class MainActivity extends AppCompatActivity implements AddMovieFragment.
                 }
                 ft.addToBackStack(null);
                 DialogFragment dialogFragment = new AddMovieFragment();
-                dialogFragment.setCancelable(false);
+                dialogFragment.setCancelable(true);
                 dialogFragment.show(ft, "dialog");
             }
         });
-        setupRecyclerView();
-        populateList();
+    }
+
+    public void populateList() {
+        for (int i = 0; i < 25; i++) {
+            moviesAdapter.addMovie("Superman", "Action", "2013");
+            moviesAdapter.addMovie("Iron Man", "Adventure & Action", "2011");
+        }
+        moviesAdapter.notifyDataSetChanged();
     }
 
     public void setupRecyclerView() {
         recyclerView = findViewById(R.id.recycler_view);
+        moviesAdapter = new MovieAdapter2();
+        recyclerView.setAdapter(moviesAdapter);
+        // **** SETUP DISPLAY FOR RECYCLER VIEW ****
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -64,22 +75,5 @@ public class MainActivity extends AppCompatActivity implements AddMovieFragment.
                 }
             }
         });
-
-        moviesAdapter = new MoviesAdapter();
-        recyclerView.setAdapter(moviesAdapter);
-    }
-
-    public void populateList() {
-        for (int i = 0; i < 3; i++) {
-            moviesAdapter.addMovie("Aliens", "Science Fiction", "1986");
-            moviesAdapter.addMovie("Iron Man", "Action & Adventure", "2008");
-        }
-        moviesAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void addMovieToList(String title, String year, String genre) {
-        moviesAdapter.addMovie(title, genre, year);
-        moviesAdapter.notifyDataSetChanged();
     }
 }

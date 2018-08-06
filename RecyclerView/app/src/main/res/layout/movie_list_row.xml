@@ -23,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:textColor="#121111"
-        android:text="Year" />
+        android:text="Year"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/movie_genre"
