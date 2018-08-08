@@ -74,7 +74,7 @@ public class AddMovieFragment extends DialogFragment {
             genre.delete(genre.length() - 2, genre.length());
         }
         if (title.isEmpty() || year.isEmpty() || genre.toString().isEmpty() || year.length() != 4) {
-            alertView("Error", "Please fill in all fields", getContext(), null);
+            alertView("Error", "Please fill in all fields",  "Try Again!", getContext(), null);
         } else {
             callbackToActivity = (CallbackToActivity) getActivity();
             callbackToActivity.addMovieToList(title, year, genre.toString());
@@ -82,13 +82,14 @@ public class AddMovieFragment extends DialogFragment {
         }
     }
 
-    private void alertView(String title, String message, Context context, final Callable<Void> resetGame) {
+
+    private void alertView(String title, String message, String buttonName, Context context, final Callable<Void> resetGame) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setTitle(title)
                 .setIcon(R.drawable.ic_launcher_foreground)
                 .setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("Try Again!", new DialogInterface.OnClickListener() {
+                .setPositiveButton(buttonName, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialoginterface, int i) {
                         dialoginterface.cancel();
                         if (resetGame != null) {
