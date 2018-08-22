@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/food_page"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_lock_idle_alarm"
+        android:title="Food"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/drink_page"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_media_play"
+        android:title="Drink"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/orders_page"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Orders"
+        app:showAsAction="ifRoom" />
+</menu>
