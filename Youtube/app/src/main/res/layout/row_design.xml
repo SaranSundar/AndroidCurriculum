@@ -9,9 +9,10 @@
     android:padding="8dp">
 
     <ImageView
+        android:id="@+id/video_pic"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         android:src="@drawable/background" />
 
     <RelativeLayout
