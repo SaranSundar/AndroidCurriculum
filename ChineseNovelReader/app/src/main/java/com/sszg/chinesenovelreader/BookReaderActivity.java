@@ -22,7 +22,7 @@ public class BookReaderActivity extends AppCompatActivity {
     }
 
     public void clickScreen(View v) {
-        Toast.makeText(this, "WORKING", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "WORKING", Toast.LENGTH_SHORT).show();
         if (bookSettings.getVisibility() == View.INVISIBLE) {
             bookSettings.setVisibility(View.VISIBLE);
         } else {
